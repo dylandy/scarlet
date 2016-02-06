@@ -1,0 +1,6 @@
+*.swp
+*.yml
+*.lock
+public/.sass-cache/*
+tmp/*  
+log/*

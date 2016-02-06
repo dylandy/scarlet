@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "thor"
+
+class Scarlet < Thor
+
+  desc "generate" , "generate migration" 
+  def generate(migration)
+    system("rake db:create_migration NAME=#{migration}")
+  end
+
+  desc "console" , "open console for scarlet template"
+  def console
+    system("rake console")
+  end
+
+  desc "server" , "server optionss"
+  method_option :port , :aliases => "-p" , :desc => "specify server port number"
+  method_option :env , :aliases => "-e" , :desc => "temperary change server environment mode"
+  def server(action)
+    unless options[:env]
+      case action
+      when "start"
+        if options[:port]
+          system("passenger start --daemonize --address 127.0.0.1 --port #{options[:port]}")
+        else
+          system("passenger start --daemonize --address 127.0.0.1 --port 3000")
+        end
+      when "stop"
+        if options[:port]
+          system("passenger stop -p #{options[:port]}")
+          puts "scarlet stopped"
+        else
+          system("passenger stop -p 3000")
+          puts "scarlet stopped"
+        end
+      when "restart"
+          system("passenger-config restart-app")
+      end
+    else
+      ENV["SCARLET_ENV"] = options[:env] 
+      puts "env = #{options[:env]}"
+      case action
+      when "start"
+        if options[:port]
+          system("passenger start --daemonize --address 127.0.0.1 --port #{options[:port]} --environment #{options[:env]}")
+        else
+          system("passenger start --daemonize --address 127.0.0.1 --port 3000 --environment #{options[:env]}")
+        end
+      when "stop"
+        if options[:port]
+          system("passenger stop -p  #{options[:port]}")
+          puts "scarlet stopped"
+        else
+          system("passenger stop --environment #{options[:env]}")
+          puts "scarlet stopped"
+        end
+      when "restart"
+          system("passenger-config restart-app")
+      end
+    end
+  end
+end
+Scarlet.start

@@ -4,3 +4,5 @@
 public/.sass-cache/*
 tmp/*  
 log/*
+vendor/*
+.bundle

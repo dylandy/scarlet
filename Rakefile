@@ -12,17 +12,17 @@ namespace :db do
   end
   desc "setting socket for mysql"
   task :config do
-   system("cp ./config/database.yml.example database.yml")
-   config = YAML.load_file("./config/database.yml")
-   location = `mysql_config --socket`.split("\n").first 
-   config["default"]["socket"] = location
-   STDOUT.print "mysql user name:"
-   user_name = STDIN.gets.chomp
-   config["default"]["username"] = user_name
-   STDOUT.print "password for mysql user:"
-   password = STDIN.noecho(&:gets).chomp
-   config["default"]["password"] = password
-   File.open('./config/database.yml', 'w') {|f| f.write config.to_yaml } 
+     config = YAML.load_file("#{Dir.pwd}/config/database.yml")
+     location = `mysql_config --socket`.split("\n").first 
+     config["default"]["socket"] = location
+     STDOUT.print "mysql user name:"
+     user_name = STDIN.gets.chomp
+     config["default"]["username"] = user_name
+     STDOUT.print "password for mysql user:"
+     password = STDIN.noecho(&:gets).chomp
+     puts ""
+     config["default"]["password"] = password
+     File.open("#{Dir.pwd}/config/database.yml", 'w') {|f| f.write config.to_yaml } 
   end
 end
 

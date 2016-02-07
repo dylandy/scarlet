@@ -1,4 +1,5 @@
 require "./config/environment"
+require "yaml"
 require "sinatra/activerecord/rake"
 
 namespace :db do
@@ -8,6 +9,20 @@ namespace :db do
   task :up do
     Rake::Task["db:migrate"].invoke
     Rake::Task["db:seed"].invoke
+  end
+  desc "setting socket for mysql"
+  task :config do
+   system("cp ./config/database.yml.example database.yml")
+   config = YAML.load_file("./config/database.yml")
+   location = `mysql_config --socket`.split("\n").first 
+   config["default"]["socket"] = location
+   STDOUT.print "mysql user name:"
+   user_name = STDIN.gets.chomp
+   config["default"]["username"] = user_name
+   STDOUT.print "password for mysql user:"
+   password = STDIN.noecho(&:gets).chomp
+   config["default"]["password"] = password
+   File.open('./config/database.yml', 'w') {|f| f.write config.to_yaml } 
   end
 end
 
@@ -19,3 +34,4 @@ desc "open console with models and all environments"
 task :console => :environment do
   Pry.start
 end
+

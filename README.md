@@ -10,50 +10,56 @@ Scarlet is a web-application framework with simple MVC architecture.
 
 ##Getting started
 ---
-* install the dependencies
+ install the dependencies
 
 ```
 $ bundle install
 ```
 
-* config database setting in config folder
-* create database
+config database setting 
+
+```
+$ rake db:config
+```
+
+create database
 
 ```
 $ rake db:create
 ```
 
-* add database migration
+add database migration
 
 ```
 $ ./bin/scarlet generate db_migration_name
 
-> this will create a migration file in *db/migrate/*
-> after writing the migration file remember to migrate your database 
-> rake db:migrate
-> after migrate your database create a model in app/model folder
+this will create a migration file in **db/migrate/**
+after writing the migration file remember to migrate your database
+rake db:migrate
+after migrate your database create a model in app/model folder
+
 ```
 
-* add your routing rules in *config/routes*
-* start server 
+ add your routing rules in *config/routes*
+ start server 
 
 ```
 $ ./bin/scarlet server start
 ```
 
-* stop server
+ stop server
 
 ```
 $ ./bin/scarlet server stop
 ```
 
-* restart server
+ restart server
 
 ```
 $ ./bin/scarlet server restart
 ```
 
-* you can start a console to validate the code for your ORM and your model  
+ you can start a console to validate the code for your ORM and your model  
 
 ```
 $ ./bin/scarlet console

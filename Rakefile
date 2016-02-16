@@ -22,7 +22,13 @@ namespace :db do
      password = STDIN.noecho(&:gets).chomp
      puts ""
      config["default"]["password"] = password
+     STDOUT.print "project database name:"
+     project_db = STDIN.gets.chomp
+     config["development"]["database"] = "#{project_db}_development"
+     config["test"]["database"] = "#{project_db}_test"
+     config["production"]["database"] = "#{project_db}_production"
      File.open("#{Dir.pwd}/config/database.yml", 'w') {|f| f.write config.to_yaml } 
+     system("rake db:create")
   end
 end
 

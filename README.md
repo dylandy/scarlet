@@ -8,6 +8,7 @@ Scarlet is a web-application framework with simple MVC architecture.
 1. gem bundler ( if ruby version > 2.2 )
 1. mysql server  
 
+
 ##Getting started
 ---
  install the dependencies
@@ -22,12 +23,6 @@ config database setting
 $ rake db:config
 ```
 
-create database
-
-```
-$ rake db:create
-```
-
 add database migration for some database modification.
 
 ```
@@ -36,7 +31,7 @@ $ ./bin/scarlet generate db_migration_name
 this will create a migration file in **db/migrate/**
 after writing the migration file remember to migrate your database
 rake db:migrate
-after migrate your database create a model in app/model folder
+after migrate your database, create a model file in app/model folder which would be a object for operating ORM  
 
 ```
 

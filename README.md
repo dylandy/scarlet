@@ -35,8 +35,7 @@ after migrate your database, create a model file in app/model folder which would
 
 ```
 
-add your routing rules in *config/routes*
-start server 
+add your routing rules in config.ru then restart server
 
 ```
 $ ./bin/scarlet server start

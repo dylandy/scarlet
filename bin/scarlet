@@ -4,8 +4,7 @@ require "rubygems"
 require "thor"
 
 class Scarlet < Thor
-  index_of_scarlet = Dir.pwd.split("/").find_index "scarlet"
-  @@application_root = Dir.pwd.split("/")[0..index_of_scarlet].join("/")
+  @@application_root = File.dirname(__FILE__).split("/")[0..-2].join("/")
   desc "generate" , "generate migration" 
   def generate(migration)
     Dir.chdir(@@application_root) do

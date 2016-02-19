@@ -32,6 +32,19 @@ namespace :db do
   end
 end
 
+task :install do
+  #added alias to bashrc for automatically run scarlet cli interface
+  unless File.readlines(File.expand_path("~/.bashrc")).grep(/scarlet\/bin\/scarlet/).any?
+    File.open(File.expand_path("~/.bashrc") , "a+") do |f|
+      f.puts("alias='ruby "+ "#{Dir.pwd}/bin/scarlet'")
+    end
+    system("source ~/.bashrc")
+    puts "scarlet has just been installed! try it out now."
+  else
+    puts "scarlet has been installed! try it out now."
+  end
+end
+
 task :environment do
   require "./config/environment"
 end

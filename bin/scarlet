@@ -4,7 +4,7 @@ require "rubygems"
 require "thor"
 
 class Scarlet < Thor
-  @@application_root = File.dirname(__FILE__).split("/")[0..-2].join("/")
+  @@application_root = File.dirname(File.dirname(__FILE__))
   desc "generate" , "generate migration" 
   def generate(migration)
     Dir.chdir(@@application_root) do
@@ -14,7 +14,10 @@ class Scarlet < Thor
 
   desc "console" , "open console for scarlet template"
   def console
-    system("rake console")
+    puts "welcome to scarlet console"
+    Dir.chdir(@@application_root) do
+     system("rake console")
+    end
   end
 
   desc "server" , "server optionss"

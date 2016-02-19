@@ -40,11 +40,13 @@ class Scarlet < Thor
         if options[:port]
           Dir.chdir(@@application_root) do
             system("passenger stop -p #{options[:port]}")
+            system("rm passenger.#{options[:port]}*")
             puts "scarlet stopped"
           end
         else
           Dir.chdir(@@application_root) do
             system("passenger stop -p 3000")
+            system("rm passenger.3000*")
             puts "scarlet stopped"
           end
         end

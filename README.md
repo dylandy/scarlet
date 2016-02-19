@@ -17,6 +17,12 @@ Scarlet is a web-application framework with simple MVC architecture.
 $ bundle install --path vendor/bundle
 ```
 
+install cli command
+
+```
+$ rake install
+```
+
 config database setting 
 
 ```
@@ -26,7 +32,7 @@ $ rake db:config
 add database migration for some database modification.
 
 ```
-$ ./bin/scarlet generate db_migration_name
+$ scarlet generate db_migration_name
 
 this will create a migration file in **db/migrate/**
 after writing the migration file remember to migrate your database
@@ -38,25 +44,25 @@ after migrate your database, create a model file in app/model folder which would
 add your routing rules in config.ru then restart server
 
 ```
-$ ./bin/scarlet server start
+$ scarlet server start
 ```
 
 to stop server
 
 ```
-$ ./bin/scarlet server stop
+$ scarlet server stop
 ```
 
 to restart server
 
 ```
-$ ./bin/scarlet server restart
+$ scarlet server restart
 ```
 
 you can start a console to validate the code for your ORM and your model  
 
 ```
-$ ./bin/scarlet console
+$ scarlet console
 ```
 
 ##TODO

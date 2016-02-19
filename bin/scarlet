@@ -5,7 +5,7 @@ require "thor"
 
 class Scarlet < Thor
   @@application_root = File.dirname(File.dirname(__FILE__))
-  desc "generate" , "generate migration" 
+  desc "generate [MIGRATION NAME]" , "generate migration" 
   def generate(migration)
     Dir.chdir(@@application_root) do
       system("rake db:create_migration NAME=#{migration}")
@@ -20,7 +20,7 @@ class Scarlet < Thor
     end
   end
 
-  desc "server" , "server optionss"
+  desc "server [COMMAND] (-p PORTS)" , "server options"
   method_option :port , :aliases => "-p" , :desc => "specify server port number"
   method_option :env , :aliases => "-e" , :desc => "temperary change server environment mode"
   def server(action)

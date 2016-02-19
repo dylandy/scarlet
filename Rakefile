@@ -3,18 +3,14 @@ require "yaml"
 require "sinatra/activerecord/rake"
 
 namespace :db do
-  task  :down do
-    Rake::Task["db:rollback"].invoke
-  end
-  task :up do
-    Rake::Task["db:migrate"].invoke
-    Rake::Task["db:seed"].invoke
-  end
   desc "setting socket for mysql"
   task :config do
      config = YAML.load_file("#{Dir.pwd}/config/database.yml")
-     location = `mysql_config --socket`.split("\n").first 
+     location = `mysql_config --socket`.chomp 
      config["default"]["socket"] = location
+     config["development"]["socket"] = location
+     config["test"]["socket"] = location
+     config["production"]["socket"] = location
      STDOUT.print "mysql user name:"
      user_name = STDIN.gets.chomp
      config["default"]["username"] = user_name
@@ -27,21 +23,30 @@ namespace :db do
      config["development"]["database"] = "#{project_db}_development"
      config["test"]["database"] = "#{project_db}_test"
      config["production"]["database"] = "#{project_db}_production"
-     File.open("#{Dir.pwd}/config/database.yml", 'w') {|f| f.write config.to_yaml } 
+     File.open("#{Dir.pwd}/config/database.yml", 'w+') {|f| f.write config.to_yaml } 
      system("rake db:create")
   end
 end
 
+desc "install scarlet cli commands"
 task :install do
   #added alias to bashrc for automatically run scarlet cli interface
-  unless File.readlines(File.expand_path("~/.bashrc")).grep(/scarlet\/bin\/scarlet/).any?
-    File.open(File.expand_path("~/.bashrc") , "a+") do |f|
-      f.puts("alias='ruby "+ "#{Dir.pwd}/bin/scarlet'")
+  if File.exist? File.expand_path("~/.bashrc") 
+    unless File.readlines(File.expand_path("~/.bashrc")).grep(/scarlet\/bin\/scarlet/).any?
+      File.open(File.expand_path("~/.bashrc") , "a+") do |f|
+        f.puts("alias scarlet='ruby "+ "#{Dir.pwd}/bin/scarlet'")
+      end
+      system(". ~/.bashrc")
+      puts "scarlet cli has just been installed! type 'scarlet --help' for more information."
+    else
+      puts "scarlet has been installed! type 'scarlet --help' for more information."
     end
-    system("source ~/.bashrc")
-    puts "scarlet has just been installed! try it out now."
   else
-    puts "scarlet has been installed! try it out now."
+    File.open(File.expand_path("~/.bashrc") , "a+") do |f|
+      f.puts("alias scarlet='ruby "+ "#{Dir.pwd}/bin/scarlet'")
+    end
+    system(". ~/.bashrc")
+    puts "scarlet has just been installed! type 'scarlet --help' for more information."
   end
 end
 

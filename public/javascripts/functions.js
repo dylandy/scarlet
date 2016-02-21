@@ -1,3 +1,0 @@
-var example = function(){
-
-}

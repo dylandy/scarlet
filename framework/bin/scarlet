@@ -1,0 +1,91 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "thor"
+
+class Scarlet < Thor
+  @@application_root = File.dirname(File.dirname(__FILE__))
+  desc "generate [MIGRATION NAME]" , "generate migration" 
+  def generate(migration)
+    Dir.chdir(@@application_root) do
+      system("rake db:create_migration NAME=#{migration}")
+    end
+  end
+
+  desc "console" , "open console for scarlet template"
+  def console
+    puts "welcome to scarlet console"
+    Dir.chdir(@@application_root) do
+     system("rake console")
+    end
+  end
+
+  desc "server [COMMAND] (-p PORTS)" , "server options"
+  method_option :port , :aliases => "-p" , :desc => "specify server port number"
+  method_option :env , :aliases => "-e" , :desc => "temperary change server environment mode"
+  def server(action)
+    unless options[:env]
+      case action
+      when "start"
+        if options[:port]
+          Dir.chdir(@@application_root) do
+            system("passenger start --daemonize --address 127.0.0.1 --port #{options[:port]}")
+          end
+        else
+          Dir.chdir(@@application_root) do
+            system("passenger start --daemonize --address 127.0.0.1 --port 3000")
+          end
+        end
+      when "stop"
+        if options[:port]
+          Dir.chdir(@@application_root) do
+            system("passenger stop -p #{options[:port]}")
+            system("rm passenger.#{options[:port]}*")
+            puts "scarlet stopped"
+          end
+        else
+          Dir.chdir(@@application_root) do
+            system("passenger stop -p 3000")
+            system("rm passenger.3000*")
+            puts "scarlet stopped"
+          end
+        end
+      when "restart"
+          Dir.chdir(@@application_root) do
+            system("passenger-config restart-app")
+          end
+      end
+    else
+      ENV["SCARLET_ENV"] = options[:env] 
+      case action
+      when "start"
+        if options[:port]
+          Dir.chdir(@@application_root) do
+            system("passenger start --daemonize --address 127.0.0.1 --port #{options[:port]} --environment #{options[:env]}")
+          end
+        else
+          Dir.chdir(@@application_root) do
+            system("passenger start --daemonize --address 127.0.0.1 --port 3000 --environment #{options[:env]}")
+          end
+        end
+      when "stop"
+        if options[:port]
+          Dir.chdir(@@application_root) do
+            system("passenger stop -p  #{options[:port]}")
+            puts "scarlet stopped"
+          end
+        else
+          Dir.chdir(@@application_root) do
+            system("passenger stop --environment #{options[:env]}")
+            puts "scarlet stopped"
+          end
+        end
+      when "restart"
+        Dir.chdir(@@application_root) do
+          system("passenger-config restart-app")
+        end
+      end
+    end
+  end
+end
+Scarlet.start
